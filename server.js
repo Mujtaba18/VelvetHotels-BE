@@ -17,6 +17,11 @@ app.use(express.urlencoded({ extended: false }))
 const AuthRouter = require("./routes/AuthRouter")
 app.use("/auth", AuthRouter)
 
+// Sreach routes
+// Use hotel routes
+const hotelRoutes = require("./routes/HotelRouter")
+app.use("/hotels", hotelRoutes)
+
 app.use("/", (req, res) => {
   res.send(`Connected!`)
 })
