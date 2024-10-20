@@ -15,7 +15,10 @@ app.use(express.urlencoded({ extended: false }))
 
 // user auth routes
 const AuthRouter = require("./routes/AuthRouter")
+const amenityRouter = require("./routes/amenity")
+
 app.use("/auth", AuthRouter)
+app.use("/amenities", amenityRouter)
 
 app.use("/", (req, res) => {
   res.send(`Connected!`)
