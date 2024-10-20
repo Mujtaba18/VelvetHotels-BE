@@ -1,4 +1,5 @@
 const express = require("express")
+const path = require('path');
 const logger = require("morgan")
 const cors = require("cors")
 
@@ -18,7 +19,11 @@ const HotelRouter = require("./routes/Hotel")
 app.use("/hotels", HotelRouter)
 // user auth routes
 const AuthRouter = require("./routes/AuthRouter")
+const amenityRouter = require("./routes/amenity")
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/auth", AuthRouter)
+app.use("/amenities", amenityRouter)
 
 // Sreach routes
 // Use hotel routes
