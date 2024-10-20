@@ -1,15 +1,32 @@
+const multer = require('multer');
 const Amenity = require('../models/Amenity')
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+      cb(null, 'uploads/'); // Directory to store uploaded files
+  },
+  filename: (req, file, cb) => {
+      cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+const upload = multer({ storage });
 
 // Add Amenities
 exports.addAmenity = async (req, res) => {
   console.log('Received body:', req.body);
+  console.log('File received:', req.file);
   try {
-      const newAmenity = new Amenity(req.body);
-      await newAmenity.save();
-      res.status(201).json({ message: 'Amenity added successfully', amenity: newAmenity });
-  } catch (error) {
-      res.status(400).json({ message: 'Error adding amenity', error: error.message });
-  }
+    const newAmenity = new Amenity({
+        amenity_name: req.body.amenity_name,
+        amenity_description: req.body.amenity_description,
+        amenity_icon: req.file.path, // Save the file path in the database
+    });
+
+    await newAmenity.save();
+    res.status(201).json({ message: 'Amenity added successfully', amenity: newAmenity });
+} catch (error) {
+    res.status(400).json({ message: 'Error adding amenity', error: error.message });
+}
 };
 
 // Get Amenities
