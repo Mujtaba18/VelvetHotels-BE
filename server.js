@@ -13,7 +13,9 @@ app.use(logger("dev"))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
-
+// user auth routes
+const AuthRouter = require("./routes/AuthRouter")
+app.use("/auth", AuthRouter)
 
 app.use("/", (req, res) => {
   res.send(`Connected!`)
