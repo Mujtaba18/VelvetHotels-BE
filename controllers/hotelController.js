@@ -1,4 +1,4 @@
-const Hotel = require("../models/Hotel")
+const Hotel = require("../models/Hotel") // Adjust the path as needed
 
 // Search Hotels
 exports.searchHotels = async (req, res) => {
@@ -8,23 +8,35 @@ exports.searchHotels = async (req, res) => {
   if (!name || name.trim() === "") {
     return res.status(400).send({ message: "Search term is required" })
   }
-
-  const searchTerms = name
-    .split(" ")
-    .map((term) => term.trim())
-    .filter((term) => term !== "")
-
-  const regexConditions = searchTerms.map((term) => ({
-    hotel_name: { $regex: term, $options: "i" },
-  }))
+  const searchTerm = name.trim().toLowerCase() //remove spaces
+  // crate a Regular expressions that filter based on all letters
+  const regexPattern = new RegExp(
+    searchTerm
+      .split("")
+      .map((char) => `(?=.*${char})`)
+      .join(""),
+    "i"
+  )
 
   try {
-    const hotels = await Hotel.find({
-      $and: regexConditions,
-    })
-
+    const hotels = await Hotel.find().where("hotel_name").regex(regexPattern)
     res.status(200).send(hotels)
   } catch (error) {
-    res.status(500).send({ message: "Server Error", error: error.message })
+    throw error
+  }
+}
+
+// hotel detalis
+exports.getHotelDetails = async (req, res) => {
+  const { hotelId } = req.params
+  console.log(req.params)
+  try {
+    const HotelDetails = await Hotel.findById(hotelId)
+    if (!HotelDetails) {
+      return res.status(400).send({ message: "HotelDetails not found" })
+    }
+    res.status(200).json(HotelDetails)
+  } catch (error) {
+    throw error
   }
 }
