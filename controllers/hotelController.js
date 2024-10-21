@@ -25,3 +25,18 @@ exports.searchHotels = async (req, res) => {
     throw error
   }
 }
+
+// hotel detalis
+exports.getHotelDetails = async (req, res) => {
+  const { hotelId } = req.params
+  console.log(req.params)
+  try {
+    const HotelDetails = await Hotel.findById(hotelId)
+    if (!HotelDetails) {
+      return res.status(400).send({ message: "HotelDetails not found" })
+    }
+    res.status(200).json(HotelDetails)
+  } catch (error) {
+    throw error
+  }
+}
