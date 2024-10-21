@@ -6,6 +6,8 @@ const hotelSchema = new mongoose.Schema({
   hotel_description: { type: String },
   hotel_price: { type: Number, required: true },
   hotel_rating: { type: Number, default: 0 },
+  hotel_stars: { type: Number, default: 0 },
+  hotel_rooms: { type: Number, default: 0 },
   hotel_image: { type: String },
   amenities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Amenity" }],
 })
