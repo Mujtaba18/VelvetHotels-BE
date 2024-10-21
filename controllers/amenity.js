@@ -19,7 +19,7 @@ exports.addAmenity = async (req, res) => {
     const newAmenity = new Amenity({
         amenity_name: req.body.amenity_name,
         amenity_description: req.body.amenity_description,
-        amenity_icon: req.file.path, // Save the file path in the database
+        amenity_icon: req.file.path, 
     });
 
     await newAmenity.save();
