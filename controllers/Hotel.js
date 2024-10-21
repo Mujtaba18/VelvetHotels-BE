@@ -26,6 +26,7 @@ const addHotel = async (req, res) => {
     hotel_description,
     hotel_price,
     hotel_rating,
+    hotel_image,
     amenities
   } = req.body
 
@@ -36,6 +37,7 @@ const addHotel = async (req, res) => {
       hotel_description,
       hotel_price,
       hotel_rating,
+      hotel_image,
       amenities
     })
     console.log('hotel:' + newHotel)
@@ -46,8 +48,27 @@ const addHotel = async (req, res) => {
   }
 }
 
+// Delete hotel
+const deleteHotel = async (req, res) => {
+  const { hotelId } = req.params
+
+  try {
+    const deletedHotel = await Hotel.findByIdAndDelete(hotelId)
+
+    if (!deletedHotel) {
+      return res.status(404).json({ message: 'Hotel not found' })
+    }
+
+    res.json({ message: 'Hotel deleted successfully' })
+  } catch (error) {
+    console.error('Error deleting hotel:', error)
+    res.status(500).json({ message: 'Server error' })
+  }
+}
+
 module.exports = {
   getHotels,
   getAmenities,
-  addHotel
+  addHotel,
+  deleteHotel
 }

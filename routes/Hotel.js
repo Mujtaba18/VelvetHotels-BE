@@ -11,4 +11,7 @@ router.get('/getAmenities', hotelCtrl.getAmenities)
 // Route to add a new hotel
 router.post('/addHotel', hotelCtrl.addHotel)
 
+// Route to delete a hotel by id
+router.delete('/deleteHotel/:hotelId', hotelCtrl.deleteHotel)
+
 module.exports = router
