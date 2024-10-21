@@ -1,6 +1,15 @@
 const Hotel = require('../models/Hotel')
+const Amenity = require('../models/Amenity')
 
-// get all hotels with amenities
+const getAmenities = async (req, res) => {
+  try {
+    const amenities = await Amenity.find({})
+    res.status(200).json(amenities)
+  } catch (error) {
+    res.status(500).json({ error: 'Error fetching amenities' })
+  }
+}
+
 const getHotels = async (req, res) => {
   try {
     const hotels = await Hotel.find()
@@ -10,7 +19,6 @@ const getHotels = async (req, res) => {
   }
 }
 
-// add a new hotel with amenities
 const addHotel = async (req, res) => {
   const {
     hotel_name,
@@ -18,7 +26,6 @@ const addHotel = async (req, res) => {
     hotel_description,
     hotel_price,
     hotel_rating,
-    hotel_image,
     amenities
   } = req.body
 
@@ -29,18 +36,18 @@ const addHotel = async (req, res) => {
       hotel_description,
       hotel_price,
       hotel_rating,
-      hotel_image,
       amenities
     })
-
-    const savedHotel = await newHotel.save()
-    res.status(201).json(savedHotel)
+    console.log('hotel:' + newHotel)
+    await newHotel.save()
+    res.json(newHotel)
   } catch (error) {
-    res.status(400).json({ message: error.message })
+    res.status(500).json({ error: 'Error adding hotel' })
   }
 }
 
 module.exports = {
   getHotels,
+  getAmenities,
   addHotel
 }
