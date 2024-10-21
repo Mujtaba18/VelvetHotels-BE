@@ -38,7 +38,7 @@ exports.getHotelDetails = async (req, res) => {
   const { hotelId } = req.params
   console.log(req.params)
   try {
-    const HotelDetails = await Hotel.findById(hotelId)
+    const HotelDetails = await Hotel.findById(hotelId).populate("amenities")
     if (!HotelDetails) {
       return res.status(400).send({ message: "HotelDetails not found" })
     }
