@@ -12,7 +12,7 @@ const getAmenities = async (req, res) => {
 
 const getHotels = async (req, res) => {
   try {
-    const hotels = await Hotel.find()
+    const hotels = await Hotel.find().populate('amenities')
     res.status(200).json(hotels)
   } catch (error) {
     res.status(500).json({ message: error.message })
