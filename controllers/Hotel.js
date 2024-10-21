@@ -25,7 +25,8 @@ const addHotel = async (req, res) => {
     hotel_location,
     hotel_description,
     hotel_price,
-    hotel_rating,
+    hotel_stars,
+    hotel_rooms,
     amenities
   } = req.body
 
@@ -35,7 +36,8 @@ const addHotel = async (req, res) => {
       hotel_location,
       hotel_description,
       hotel_price,
-      hotel_rating,
+      hotel_stars,
+      hotel_rooms,
       amenities
     })
     console.log('hotel:' + newHotel)
