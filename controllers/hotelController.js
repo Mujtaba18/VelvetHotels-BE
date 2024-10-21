@@ -19,7 +19,14 @@ exports.searchHotels = async (req, res) => {
   )
 
   try {
-    const hotels = await Hotel.find().where("hotel_name").regex(regexPattern)
+    const hotels = await Hotel.find({
+      $or: [
+        //  find hotels based on there names (.where("hotel_name").regex(regexPattern))
+        { hotel_name: { $regex: regexPattern } },
+        //  find hotels based on there location (.where("hotel_location").regex(regexPattern) )
+        { hotel_location: { $regex: regexPattern } },
+      ],
+    })
     res.status(200).send(hotels)
   } catch (error) {
     throw error
