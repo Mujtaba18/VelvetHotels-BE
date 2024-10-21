@@ -12,7 +12,7 @@ const getAmenities = async (req, res) => {
 
 const getHotels = async (req, res) => {
   try {
-    const hotels = await Hotel.find()
+    const hotels = await Hotel.find().populate('amenities')
     res.status(200).json(hotels)
   } catch (error) {
     res.status(500).json({ message: error.message })
@@ -20,23 +20,17 @@ const getHotels = async (req, res) => {
 }
 
 const addHotel = async (req, res) => {
-  const {
-    hotel_name,
-    hotel_location,
-    hotel_description,
-    hotel_price,
-    hotel_rating,
-    amenities
-  } = req.body
 
   try {
     const newHotel = new Hotel({
-      hotel_name,
-      hotel_location,
-      hotel_description,
-      hotel_price,
-      hotel_rating,
-      amenities
+      hotel_name: req.body.hotel_name,
+      hotel_location: req.body.hotel_location,
+      hotel_description: req.body.hotel_description,
+      hotel_price: req.body.hotel_price,
+      hotel_stars: req.body.hotel_stars,
+      hotel_rooms: req.body.hotel_rooms,
+      hotel_image: req.file.path,
+      amenities: req.body.amenities
     })
     console.log('hotel:' + newHotel)
     await newHotel.save()
