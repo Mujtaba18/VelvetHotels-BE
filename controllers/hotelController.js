@@ -1,5 +1,5 @@
-const Hotel = require("../models/Hotel") // Adjust the path as needed
-
+const Hotel = require("../models/Hotel")
+const Booking = require("../models/Booking")
 // Search Hotels
 exports.searchHotels = async (req, res) => {
   const { name } = req.query // Get hotel name from query parameters
@@ -47,3 +47,57 @@ exports.getHotelDetails = async (req, res) => {
     throw error
   }
 }
+
+//  hotel booking AND updating the hotel "hotel_rooms"
+exports.newBooking = async (req, res) => {
+  try {
+    console.log(req.body)
+    const {
+      userId,
+      hotelId,
+      checkIn,
+      checkOut,
+      numberOfGuests,
+      rooms,
+      hotelPrice,
+    } = req.body
+
+    // Validate required fields
+    if (
+      !userId ||
+      !hotelId ||
+      !checkIn ||
+      !checkOut ||
+      !numberOfGuests ||
+      !rooms
+    ) {
+      return res.send({ error: "All fields are required." })
+    }
+
+    // Create a new booking
+    const booking = new Booking({
+      user: userId,
+      hotel: hotelId,
+      checkInDate: new Date(checkIn),
+      checkOutDate: new Date(checkOut),
+      numberOfGuests,
+      totalPrice: rooms * hotelPrice,
+    })
+
+    // Save the booking to the database
+    const savedBooking = await booking.save()
+
+    // Update the hotel_rooms  in Hotel
+    const hotel = await Hotel.findById(hotelId)
+    if (hotel) {
+      hotel.hotel_rooms -= rooms
+      await hotel.save() // Save the updated
+    }
+
+    res.send(savedBooking)
+  } catch (error) {
+    throw error
+  }
+}
+
+//

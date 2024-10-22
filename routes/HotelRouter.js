@@ -6,4 +6,8 @@ const hotelController = require("../controllers/hotelController")
 router.get("/search", hotelController.searchHotels)
 // Hotel detalis Route
 router.get("/details/:hotelId", hotelController.getHotelDetails)
+
+// Hotle Booking Rotute
+router.post("/booking", hotelController.newBooking)
+
 module.exports = router
