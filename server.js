@@ -20,10 +20,12 @@ app.use("/hotels", HotelRouter)
 // user auth routes
 const AuthRouter = require("./routes/AuthRouter")
 const amenityRouter = require("./routes/amenity")
+const ProfileRouter = require("./routes/Profile")
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 app.use("/auth", AuthRouter)
 app.use("/amenities", amenityRouter)
+app.use("/profile", ProfileRouter)
 
 // Sreach routes
 // Use hotel routes
