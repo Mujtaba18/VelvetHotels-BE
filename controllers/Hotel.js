@@ -20,8 +20,8 @@ const getHotels = async (req, res) => {
 }
 
 const addHotel = async (req, res) => {
-
   try {
+    const hotelImages = req.files['hotel_images']?.map(file => file.path) || [];
     const newHotel = new Hotel({
       hotel_name: req.body.hotel_name,
       hotel_location: req.body.hotel_location,
@@ -29,14 +29,15 @@ const addHotel = async (req, res) => {
       hotel_price: req.body.hotel_price,
       hotel_stars: req.body.hotel_stars,
       hotel_rooms: req.body.hotel_rooms,
-      hotel_image: req.file.path,
-      amenities: req.body.amenities
-    })
-    console.log('hotel:' + newHotel)
-    await newHotel.save()
-    res.json(newHotel)
+      hotel_image: req.files['hotel_image'][0].path,
+      hotel_images: hotelImages,
+      amenities: req.body.amenities,
+    });
+
+    await newHotel.save();
+    res.json(newHotel);
   } catch (error) {
-    res.status(500).json({ error: 'Error adding hotel' })
+    res.status(500).json({ error: 'Error adding hotel' });
   }
 }
 

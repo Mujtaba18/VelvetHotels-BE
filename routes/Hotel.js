@@ -21,6 +21,9 @@ router.get('/getHotels', hotelCtrl.getHotels)
 router.get('/getAmenities', hotelCtrl.getAmenities)
 
 // Route to add a new hotel
-router.post('/addHotel', upload.single('hotel_image'), hotelCtrl.addHotel)
+router.post('/addHotel', upload.fields([
+  { name: 'hotel_image', maxCount: 1 },
+  { name: 'hotel_images', maxCount: 10 }
+]), hotelCtrl.addHotel);
 
 module.exports = router
