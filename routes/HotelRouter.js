@@ -7,3 +7,5 @@ router.get("/search", hotelController.searchHotels)
 // Hotel detalis Route
 router.get("/details/:hotelId", hotelController.getHotelDetails)
 module.exports = router
+// Rate Hotel
+router.post("/:hotelId/rate", hotelController.addRating)

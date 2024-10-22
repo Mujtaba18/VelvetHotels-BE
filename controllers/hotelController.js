@@ -38,7 +38,7 @@ exports.getHotelDetails = async (req, res) => {
   const { hotelId } = req.params
   console.log(req.params)
   try {
-    const HotelDetails = await Hotel.findById(hotelId).populate("amenities")
+    const HotelDetails = await Hotel.findById(hotelId).populate("amenities").populate("hotel_rating.user");
     if (!HotelDetails) {
       return res.status(400).send({ message: "HotelDetails not found" })
     }
@@ -47,3 +47,29 @@ exports.getHotelDetails = async (req, res) => {
     throw error
   }
 }
+
+// Add Rating
+exports.addRating = async (req, res) => {
+  const { hotelId } = req.params
+  const { userId, rating, comment } = req.body
+
+  try {
+    const hotel = await Hotel.findById(hotelId)
+    if (!hotel) {
+      return res.status(404).send({ message: "Hotel not found" })
+    }
+
+    const newRating = {
+      user: userId,
+      rating,
+      comment,
+    }
+
+    hotel.hotel_rating.push(newRating)
+    await hotel.save()
+    res.status(201).send({ message: "Rating added successfully", hotel })
+  } catch (error) {
+    res.status(500).send({ message: "Error adding rating", error })
+  }
+}
+
