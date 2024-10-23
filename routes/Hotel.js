@@ -34,6 +34,8 @@ router.get("/details/:hotelId", hotelCtrl.getHotelDetails)
 
 router.post("/:hotelId/rate", hotelCtrl.addRating)
 
+router.put("/:id", upload.single("hotel_image"), hotelCtrl.updateHotelById)
+
 // Hotle Booking Route
 router.post("/booking", hotelCtrl.newBooking)
 router.get("/mybooking/:userId", hotelCtrl.getBooking)

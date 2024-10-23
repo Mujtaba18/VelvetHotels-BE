@@ -8,7 +8,7 @@ const router = express.Router()
 // Set up storage for profile picture uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./uploads/Profile/")
+    cb(null, "./public/Profile/")
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase()

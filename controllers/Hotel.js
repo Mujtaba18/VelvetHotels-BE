@@ -199,7 +199,23 @@ const addRating = async (req, res) => {
     await hotel.save()
     res.status(201).send({ message: "Rating added successfully", hotel })
   } catch (error) {
-    res.status(500).send({ message: "Error adding rating", error })
+    res.status(500).send({ message: "Error adding rating", error })}
+  }
+// Update a user by ID
+const updateHotelById = async (req, res) => {
+  try {
+    const hotel = await Hotel.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    })
+
+    if (!hotel) {
+      return res.status(404).json({ error: "Hotel not found" })
+    }
+
+    res.status(200).json(hotel)
+  } catch (error) {
+    res.status(400).json({ error: error.message })
   }
 }
 
@@ -209,6 +225,7 @@ module.exports = {
   addHotel,
   searchHotels,
   getHotelDetails,
+  updateHotelById,
   addRating,
   getBooking,
   newBooking,
