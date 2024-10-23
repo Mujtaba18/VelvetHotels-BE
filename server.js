@@ -30,7 +30,6 @@ app.use("/amenities", amenityRouter)
 app.use("/profile", ProfileRouter)
 app.use("/hotels", HotelRouter)
 
-// Search routes
 
 app.use("/", (req, res) => {
   res.send(`Connected!`)

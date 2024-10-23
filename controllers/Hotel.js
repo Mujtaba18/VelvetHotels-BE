@@ -1,18 +1,19 @@
-const Hotel = require('../models/Hotel')
-const Amenity = require('../models/Amenity')
+const Hotel = require("../models/Hotel")
+const Amenity = require("../models/Amenity")
+const Booking = require("../models/Booking")
 
 const getAmenities = async (req, res) => {
   try {
     const amenities = await Amenity.find({})
     res.status(200).json(amenities)
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching amenities' })
+    res.status(500).json({ error: "Error fetching amenities" })
   }
 }
 
 const getHotels = async (req, res) => {
   try {
-    const hotels = await Hotel.find().populate('amenities')
+    const hotels = await Hotel.find().populate("amenities")
     res.status(200).json(hotels)
   } catch (error) {
     res.status(500).json({ message: error.message })
@@ -21,7 +22,8 @@ const getHotels = async (req, res) => {
 
 const addHotel = async (req, res) => {
   try {
-    const hotelImages = req.files['hotel_images']?.map(file => file.path) || [];
+    const hotelImages =
+      req.files["hotel_images"]?.map((file) => file.path) || []
     const newHotel = new Hotel({
       hotel_name: req.body.hotel_name,
       hotel_location: req.body.hotel_location,
@@ -29,18 +31,19 @@ const addHotel = async (req, res) => {
       hotel_price: req.body.hotel_price,
       hotel_stars: req.body.hotel_stars,
       hotel_rooms: req.body.hotel_rooms,
-      hotel_image: req.files['hotel_image'][0].path,
+      hotel_image: req.files["hotel_image"][0].path,
       hotel_images: hotelImages,
       amenities: req.body.amenities,
-    });
+    })
 
-    await newHotel.save();
-    res.json(newHotel);
+    await newHotel.save()
+    res.json(newHotel)
   } catch (error) {
-    res.status(500).json({ error: 'Error adding hotel' });
+    res.status(500).json({ error: "Error adding hotel" })
   }
 }
-
+// Hussain controllers --------------------
+// Search Hotels
 const searchHotels = async (req, res) => {
   const { name } = req.query // Get hotel name from query parameters
 
@@ -73,12 +76,99 @@ const searchHotels = async (req, res) => {
   }
 }
 
+//  hotel booking AND updating the hotel "hotel_rooms"
+const newBooking = async (req, res) => {
+  try {
+    const {
+      userId,
+      hotelId,
+      checkIn,
+      checkOut,
+      numberOfGuests,
+      rooms,
+      hotelPrice,
+    } = req.body
+
+    // Validate required fields
+    if (
+      !userId ||
+      !hotelId ||
+      !checkIn ||
+      !checkOut ||
+      !numberOfGuests ||
+      !rooms
+    ) {
+      return res.send({ error: "All fields are required." })
+    }
+
+    // Create a new booking
+    const booking = new Booking({
+      user: userId,
+      hotel: hotelId,
+      checkInDate: new Date(checkIn),
+      checkOutDate: new Date(checkOut),
+      numberOfGuests,
+      totalPrice: rooms * hotelPrice,
+      rooms,
+    })
+
+    // Save the booking to the database
+    const savedBooking = await booking.save()
+
+    // Update the hotel_rooms  in Hotel
+    const hotel = await Hotel.findById(hotelId)
+    if (hotel) {
+      hotel.hotel_rooms -= rooms
+      await hotel.save() // Save the updated
+    }
+
+    res.send(savedBooking)
+  } catch (error) {
+    throw error
+  }
+}
+
+// display booking to user
+
+const getBooking = async (req, res) => {
+  try {
+    console.log("Booking", req.params)
+
+    const BookingData = await Booking.find({
+      user: req.params.userId,
+    }).populate("hotel")
+    res.status(200).json(BookingData)
+  } catch (error) {
+    throw error
+  }
+}
+
+// END
+
+// Delete hotel
+const deleteHotel = async (req, res) => {
+  const { hotelId } = req.params
+  try {
+    const deletedHotel = await Hotel.findByIdAndDelete(hotelId)
+    if (!deletedHotel) {
+      return res.status(404).json({ message: "Hotel not found" })
+    }
+    res.json({ message: "Hotel deleted successfully" })
+  } catch (error) {
+    console.error("Error deleting hotel:", error)
+    res.status(500).json({ message: "Server error" })
+  }
+}
+// END
+
 // hotel detalis
 const getHotelDetails = async (req, res) => {
   const { hotelId } = req.params
   console.log(req.params)
   try {
-    const HotelDetails = await Hotel.findById(hotelId).populate("amenities").populate("hotel_rating.user");
+    const HotelDetails = await Hotel.findById(hotelId)
+      .populate("amenities")
+      .populate("hotel_rating.user")
     if (!HotelDetails) {
       return res.status(400).send({ message: "HotelDetails not found" })
     }
@@ -113,12 +203,14 @@ const addRating = async (req, res) => {
   }
 }
 
-
 module.exports = {
   getAmenities,
   getHotels,
   addHotel,
   searchHotels,
   getHotelDetails,
-  addRating
+  addRating,
+  getBooking,
+  newBooking,
+  deleteHotel,
 }
