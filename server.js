@@ -29,8 +29,8 @@ app.use("/profile", ProfileRouter)
 
 // Sreach routes
 // Use hotel routes
-const hotelRoutes = require("./routes/HotelRouter")
-app.use("/hotels", hotelRoutes)
+// const hotelRoutes = require("./routes/HotelRouter")
+// app.use("/hotels", hotelRoutes)
 
 app.use("/", (req, res) => {
   res.send(`Connected!`)
