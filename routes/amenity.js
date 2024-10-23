@@ -1,25 +1,27 @@
-const express = require('express');
+const express = require('express')
 
-const router = express.Router();
+const router = express.Router()
 
-const amenityCtrl = require('../controllers/amenity');
+const amenityCtrl = require('../controllers/amenity')
 
-const multer = require('multer');
+const multer = require('multer')
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-      cb(null, 'uploads/amenities/');
+    cb(null, 'uploads/amenities/')
   },
   filename: (req, file, cb) => {
-      cb(null, Date.now() + '-' + file.originalname);
-  },
-});
-const upload = multer({ storage });
+    cb(null, Date.now() + '-' + file.originalname)
+  }
+})
+const upload = multer({ storage })
 
 // Add a new amenity
-router.post('/', upload.single('amenity_icon'), amenityCtrl.addAmenity);
+router.post('/', upload.single('amenity_icon'), amenityCtrl.addAmenity)
 
 // Get all amenities
-router.get('/', amenityCtrl.getAmenities);
+router.get('/', amenityCtrl.getAmenities)
 
-module.exports = router;
+router.delete('/:id', amenityCtrl.deleteAmenity)
+
+module.exports = router
