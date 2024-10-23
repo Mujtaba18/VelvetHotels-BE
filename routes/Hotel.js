@@ -26,4 +26,12 @@ router.post('/addHotel', upload.fields([
   { name: 'hotel_images', maxCount: 10 }
 ]), hotelCtrl.addHotel);
 
+// Search Hotels Route
+router.get("/search", hotelCtrl.searchHotels)
+
+// Hotel detalis Route
+router.get("/details/:hotelId", hotelCtrl.getHotelDetails)
+
+router.post("/:hotelId/rate", hotelCtrl.addRating)
+
 module.exports = router

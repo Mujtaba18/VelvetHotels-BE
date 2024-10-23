@@ -16,21 +16,21 @@ app.use(express.urlencoded({ extended: false }))
 
 // hotel routes
 const HotelRouter = require("./routes/Hotel")
-app.use("/hotels", HotelRouter)
+
 // user auth routes
 const AuthRouter = require("./routes/AuthRouter")
+
 const amenityRouter = require("./routes/amenity")
+
 const ProfileRouter = require("./routes/Profile")
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")))
 app.use("/auth", AuthRouter)
 app.use("/amenities", amenityRouter)
 app.use("/profile", ProfileRouter)
+app.use("/hotels", HotelRouter)
 
-// Sreach routes
-// Use hotel routes
-const hotelRoutes = require("./routes/HotelRouter")
-app.use("/hotels", hotelRoutes)
+// Search routes
 
 app.use("/", (req, res) => {
   res.send(`Connected!`)
